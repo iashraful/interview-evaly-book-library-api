@@ -1,0 +1,27 @@
+{
+	"folders": [
+		{
+			"path": ".",
+			"name": "Library Management"
+		}
+	],
+	"settings": {
+		"editor.tabSize": 4,
+		"python.pythonPath": "./venv/bin/python"
+	},
+	"launch": {
+		"version": "0.2.0",
+		"configurations": [
+			{
+				"name": "Python: Django",
+				"type": "python",
+				"request": "launch",
+				"program": "${workspaceFolder}/manage.py",
+				"args": [
+					"runserver"
+				],
+				"django": true
+			}
+		]
+	}
+}
