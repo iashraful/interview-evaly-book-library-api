@@ -46,8 +46,22 @@ class LoginUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
         fields = (
-            'id', 'role', 'full_name', 'first_name', 'last_name', 'username', 'created_at', 'updated_at', 'photo'
+            'id', 'role', 'full_name', 'first_name', 'last_name',
+            'username', 'email', 'created_at', 'updated_at', 'photo'
         )
+        read_only_fields = ('first_name', 'last_name', 'username', 'email',)
+
+    def update(self, instance, validated_data):
+        instance = super(LoginUserSerializer, self).update(instance=instance, validated_data=validated_data)
+        _user = instance.user
+        if 'first_name' in self.initial_data:
+            _user.first_name = self.initial_data['first_name']
+        if 'last_name' in self.initial_data:
+            _user.last_name = self.initial_data['last_name']
+        if 'email' in self.initial_data:
+            _user.email = self.initial_data['email']
+        _user.save()
+        return instance
 
 
 class RoleSerializer(serializers.ModelSerializer):
