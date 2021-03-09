@@ -4,7 +4,7 @@ from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-from core.models import UserProfile
+from core.models import UserProfile, Role
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
@@ -16,7 +16,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
         fields = (
-            'id', 'username', 'password', 'confirm_password', 'full_name', 'created_at'
+            'id', 'username', 'role', 'password', 'confirm_password', 'full_name', 'created_at'
         )
         read_only_fields = (
             'id', 'created_at'
@@ -46,5 +46,11 @@ class LoginUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
         fields = (
-            'id', 'full_name', 'first_name', 'last_name', 'username', 'created_at', 'updated_at', 'photo'
+            'id', 'role', 'full_name', 'first_name', 'last_name', 'username', 'created_at', 'updated_at', 'photo'
         )
+
+
+class RoleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Role
+        fields = ('id', 'name', 'created_at', 'updated_at', )
