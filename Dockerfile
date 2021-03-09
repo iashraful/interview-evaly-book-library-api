@@ -7,4 +7,3 @@ RUN apk update && \
 WORKDIR /app
 COPY requirements.txt /app
 RUN pip3 install -r requirements.txt
-#CMD [ "python /app/server/manage.py migrate" ]

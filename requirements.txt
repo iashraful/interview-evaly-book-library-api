@@ -14,3 +14,4 @@ sqlparse==0.4.1
 toml==0.10.1
 wrapt==1.12.1
 coreapi
+djangorestframework-jwt

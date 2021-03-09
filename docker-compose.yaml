@@ -18,7 +18,7 @@ services:
     build: ./
     restart: always
     container_name: library_management_api_server
-    command: sh -c "python /app/manage.py runserver 0.0.0.0:8000"
+    command: sh -c "python /app/manage.py makemigrations && python /app/manage.py migrate && python /app/manage.py runserver 0.0.0.0:8000"
     working_dir: /app
     env_file:
       - .env
