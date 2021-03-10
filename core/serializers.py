@@ -65,6 +65,13 @@ class LoginUserSerializer(serializers.ModelSerializer):
         return instance
 
 
+class DjangoUserBasicSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            'id', 'username',
+        )
+
 class UserProfileBasicSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile

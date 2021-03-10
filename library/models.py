@@ -4,7 +4,8 @@ from core.models import BaseEntity
 
 
 class Author(BaseEntity):
-    name = models.CharField(max_length=64)
+    user = models.OneToOneField('auth.User', on_delete=models.SET_NULL, null=True, related_name='author')
+    name = models.CharField(max_length=64, null=True)
     gender = models.CharField(max_length=16, null=True)
     website = models.URLField(null=True)
 

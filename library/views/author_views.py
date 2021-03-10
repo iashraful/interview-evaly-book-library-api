@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from library.models import Author
-from library.serializers import AuthorSerializer
+from library.serializers import AuthorSerializer, AuthorCreateSerializer
 
 
 class AuthorViewset(ModelViewSet):
@@ -11,7 +11,7 @@ class AuthorViewset(ModelViewSet):
     serializer_class = AuthorSerializer
 
     def create(self, request, *args, **kwargs):
-        serializer = AuthorSerializer(data=self.request.data)
+        serializer = AuthorCreateSerializer(data=self.request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(data=serializer.data, status=status.HTTP_201_CREATED)

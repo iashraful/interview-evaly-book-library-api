@@ -1,4 +1,5 @@
 from copy import deepcopy
+from django.contrib.auth.models import User
 
 from rest_framework import status
 
@@ -12,9 +13,16 @@ class AuthorAPIEndpointTestCase(LibraryManagementBaseTestCase):
         # Create an author for test
         self.initial_author_data = {
             'name': 'Iron Fist',
-            'gender': 'Male'
+            'gender': 'Male',
+            'username': 'iron_fist',
+            'password': self.common_passwd,
+            'confirm_password': self.common_passwd,
         }
+        _user = User(username='ash_author')
+        _user.set_password(raw_password=self.common_passwd)
+        _user.save()
         self.author = Author(name='Ashraful Islam', gender='Male')
+        self.author.profile = _user
         self.author.save()
 
     def test_delete_author_api(self):
