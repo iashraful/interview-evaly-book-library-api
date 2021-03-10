@@ -20,6 +20,7 @@ class UserRegistrationViewset(ModelViewSet):
 
 
 class LoginUserViewset(ModelViewSet):
+    serializer_class = LoginUserSerializer
 
     def retrieve(self, request, *args, **kwargs):
         user = request.user

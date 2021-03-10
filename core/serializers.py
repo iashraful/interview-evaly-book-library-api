@@ -30,6 +30,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     def create(self, attrs):
         with transaction.atomic():
             full_name = attrs['full_name']
+            role = attrs['role']
             _first_name = full_name.split(' ')[0]
             _last_name = ' '.join(full_name.split(' ')[1::])
             user = User.objects.create(
@@ -37,7 +38,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             if user:
                 user.set_password(raw_password=attrs['password'])
                 user.save()
-                profile = UserProfile(user=user, full_name=full_name)
+                profile = UserProfile(user=user, full_name=full_name, role=role)
                 profile.save()
                 return profile
 

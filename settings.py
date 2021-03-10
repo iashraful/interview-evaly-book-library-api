@@ -24,7 +24,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'core'
+    'core',
+    'library'
 ]
 
 MIDDLEWARE = [
@@ -115,6 +116,7 @@ FAST_DRF_CONFIG = {
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
+        # 'rest_framework.permissions.AllowAny',
     ),
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
@@ -151,7 +153,7 @@ JWT_AUTH = {
     'JWT_VERIFY': True,
     'JWT_VERIFY_EXPIRATION': True,
     'JWT_LEEWAY': 0,
-    'JWT_EXPIRATION_DELTA': timedelta(seconds=60 * 30), # 30 minutes
+    'JWT_EXPIRATION_DELTA': timedelta(seconds=60 * 30),  # 30 minutes
     'JWT_AUDIENCE': None,
     'JWT_ISSUER': None,
 
@@ -161,13 +163,3 @@ JWT_AUTH = {
     'JWT_AUTH_HEADER_PREFIX': 'JWT',
     'JWT_AUTH_COOKIE': None,
 }
-
-# Configure CORS settings
-if DEBUG:
-    CORS_ORIGIN_ALLOW_ALL = True
-else:
-    CORS_ORIGIN_WHITELIST = (
-        # Here it will be specific url that need to hit
-        'http://localhost'
-    )
-
