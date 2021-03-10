@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+from core.enums import RoleEnum
+
 
 class BaseEntity(models.Model):
     '''
@@ -18,6 +20,7 @@ class BaseEntity(models.Model):
 
 class Role(BaseEntity):
     name = models.CharField(max_length=32)
+    type = models.PositiveSmallIntegerField(default=RoleEnum.Member.value)
 
     class Meta:
         app_label = 'core'

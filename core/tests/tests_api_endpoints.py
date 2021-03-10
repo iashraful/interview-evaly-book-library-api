@@ -1,5 +1,6 @@
 from rest_framework import status
 
+from core.enums import RoleEnum
 from core.models import UserProfile
 from core.tests.base import LibraryManagementBaseTestCase
 
@@ -54,12 +55,14 @@ class CoreAPIEndpointTestCase(LibraryManagementBaseTestCase):
     def test_post_role_api(self):
         self.login_admin_user()
         _data = {
-            'name': 'New Test Role'
+            'name': 'New Test Role',
+            'type': RoleEnum.Member.value
         }
         response = self.client.post(path='/api/roles/', data=_data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertTrue(isinstance(response.data, dict))
         self.assertEqual(response.data['name'], 'New Test Role')
+        self.assertEqual(response.data['type'], RoleEnum.Member.value)
 
     def test_put_role_api(self):
         # Get data first
@@ -71,10 +74,12 @@ class CoreAPIEndpointTestCase(LibraryManagementBaseTestCase):
         _old_name = response.data['results'][0]['name'] # Getting the first object old name
         _data = {
             'id': _pk,
-            'name': 'New Test Role'
+            'name': 'New Test Role',
+            'type': RoleEnum.Admin.value
         }
         response = self.client.put(path=f'/api/roles/{_pk}/', data=_data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTrue(isinstance(response.data, dict))
         self.assertNotEqual(response.data['name'], _old_name) # not matched with old name
         self.assertEqual(response.data['name'], 'New Test Role') # Updated name matched
+        self.assertEqual(response.data['type'], RoleEnum.Admin.value) # Updated type matched
