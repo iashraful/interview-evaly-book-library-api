@@ -17,6 +17,10 @@ class AuthorAPIEndpointTestCase(LibraryManagementBaseTestCase):
         self.author = Author(name='Ashraful Islam', gender='Male')
         self.author.save()
 
+    def test_delete_author_api(self):
+        self.login_admin_user()
+        response = self.client.delete(path=f'/api/authors/{self.author.id}/')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_get_author_api(self):
         self.login_admin_user()
@@ -41,7 +45,7 @@ class AuthorAPIEndpointTestCase(LibraryManagementBaseTestCase):
         response = self.client.put(path=f'/api/authors/{self.author.id}/', data=_data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTrue(isinstance(response.data, dict))
-        self.assertNotEqual(response.data['name'], self.author.name) # not matched with old title
-        self.assertNotEqual(response.data['gender'], self.author.gender) # not matched with old description
-        self.assertEqual(response.data['name'], _data['name']) # Updated name matched
-        self.assertEqual(response.data['gender'], _data['gender']) # Updated name matched
+        self.assertNotEqual(response.data['name'], self.author.name)  # not matched with old title
+        self.assertNotEqual(response.data['gender'], self.author.gender)  # not matched with old description
+        self.assertEqual(response.data['name'], _data['name'])  # Updated name matched
+        self.assertEqual(response.data['gender'], _data['gender'])  # Updated name matched

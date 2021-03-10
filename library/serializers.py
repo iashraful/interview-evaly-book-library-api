@@ -30,10 +30,18 @@ class BookLoanSerializer(serializers.ModelSerializer):
         model = BookLoan
         fields = (
             'id', 'book', 'request_by', 'approved_by', 'approved_date',
-            'repayment_date', 'created_at', 'updated_at'
+            'repayment_date', 'created_at', 'updated_at',
         )
 
     def create(self, validated_data):
+        with transaction.atomic():
+            instance = super(BookLoanSerializer, self).create(validated_data=validated_data)
+            instance.request_by_id = self.initial_data.get('request_by')
+            instance.approved_by_id = self.initial_data.get('approved_by')
+            instance.save()
+            return instance
+
+    def update(self, instance, validated_data):
         with transaction.atomic():
             instance = super(BookLoanSerializer, self).create(validated_data=validated_data)
             instance.request_by_id = self.initial_data.get('request_by')

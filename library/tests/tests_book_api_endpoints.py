@@ -24,6 +24,10 @@ class BookAPIEndpointTestCase(LibraryManagementBaseTestCase):
         self.book = Book(**self.initial_book_data)
         self.book.save()
 
+    def test_delete_book_api(self):
+        self.login_admin_user()
+        response = self.client.delete(path=f'/api/books/{self.book.id}/')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_get_book_api(self):
         self.login_admin_user()
@@ -52,7 +56,8 @@ class BookAPIEndpointTestCase(LibraryManagementBaseTestCase):
         response = self.client.put(path=f'/api/books/{self.book.id}/', data=_data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTrue(isinstance(response.data, dict))
-        self.assertNotEqual(response.data['title'], self.initial_book_data['title']) # not matched with old title
-        self.assertNotEqual(response.data['description'], self.initial_book_data['description']) # not matched with old description
-        self.assertEqual(response.data['title'], _data['title']) # Updated name matched
-        self.assertEqual(response.data['description'], _data['description']) # Updated name matched
+        self.assertNotEqual(response.data['title'], self.initial_book_data['title'])  # not matched with old title
+        self.assertNotEqual(response.data['description'],
+                            self.initial_book_data['description'])  # not matched with old description
+        self.assertEqual(response.data['title'], _data['title'])  # Updated name matched
+        self.assertEqual(response.data['description'], _data['description'])  # Updated name matched
