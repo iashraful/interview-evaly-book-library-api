@@ -3,6 +3,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 from rest_framework_jwt.test import APIJWTClient
 
+from core.enums import RoleEnum
 from core.models import Role, UserProfile
 
 ROLE_VS_USERS = [
@@ -29,10 +30,12 @@ class LibraryManagementBaseTestCase(APITestCase):
         # Creating Roles and Users
         for data in ROLE_VS_USERS:
             role_name = data['role']
-            role, _created = Role.objects.get_or_create(name=role_name)
+            role = None
             if role_name == 'Admin':
+                role, _created = Role.objects.get_or_create(name=role_name, type=RoleEnum.Admin.value)
                 self.admin_role = role
             if role_name == 'Member':
+                role, _created = Role.objects.get_or_create(name=role_name, type=RoleEnum.Member.value)
                 self.member_role = role
             if not role:
                 continue

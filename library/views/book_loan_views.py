@@ -2,6 +2,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
+from core.permissions import IsAdminOrReadOnly
 from library.models import BookLoan
 from library.serializers import BookLoanSerializer
 
@@ -9,6 +10,7 @@ from library.serializers import BookLoanSerializer
 class BookLoanViewset(ModelViewSet):
     queryset = BookLoan.objects.select_related('request_by', 'approved_by').all()
     serializer_class = BookLoanSerializer
+    permission_classes = [IsAdminOrReadOnly]
 
     def create(self, request, *args, **kwargs):
         serializer = BookLoanSerializer(data=self.request.data)

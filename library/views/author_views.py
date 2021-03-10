@@ -2,6 +2,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
+from core.permissions import IsAdminOrReadOnly
 from library.models import Author
 from library.serializers import AuthorSerializer, AuthorCreateSerializer
 
@@ -9,6 +10,7 @@ from library.serializers import AuthorSerializer, AuthorCreateSerializer
 class AuthorViewset(ModelViewSet):
     queryset = Author.objects.all()
     serializer_class = AuthorSerializer
+    permission_classes = [IsAdminOrReadOnly]
 
     def create(self, request, *args, **kwargs):
         serializer = AuthorCreateSerializer(data=self.request.data)

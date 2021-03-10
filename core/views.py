@@ -5,6 +5,7 @@ from rest_framework.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST, HTTP_2
 from rest_framework.viewsets import ModelViewSet
 
 from core.models import Role, UserProfile
+from core.permissions import IsAdminOrReadOnly
 from core.serializers import UserRegistrationSerializer, LoginUserSerializer, RoleSerializer
 
 
@@ -49,6 +50,7 @@ class LoginUserViewset(ModelViewSet):
 class RoleViewset(ModelViewSet):
     queryset = Role.objects.all()
     serializer_class = RoleSerializer
+    permission_classes = [IsAdminOrReadOnly]
 
     def retrieve(self, request, *args, **kwargs):
         try:
