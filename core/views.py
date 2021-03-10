@@ -1,6 +1,7 @@
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from rest_framework.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST, HTTP_200_OK, HTTP_404_NOT_FOUND
+from rest_framework.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST, HTTP_200_OK, HTTP_404_NOT_FOUND, \
+    HTTP_204_NO_CONTENT
 from rest_framework.viewsets import ModelViewSet
 
 from core.models import Role, UserProfile
@@ -74,3 +75,10 @@ class RoleViewset(ModelViewSet):
             serializer.save()
             return Response(data=serializer.data, status=HTTP_200_OK)
         return Response(data=serializer.data, status=HTTP_400_BAD_REQUEST)
+
+    def destroy(self, request, *args, **kwargs):
+        try:
+            Role.objects.get(pk=kwargs.get('pk')).delete()
+            return Response(status=HTTP_204_NO_CONTENT)
+        except Role.DoesNotExist as err:
+            return Response(data={'message': err.__str__()}, status=HTTP_404_NOT_FOUND)

@@ -12,6 +12,7 @@ urlpatterns += [
         title='Library Management System API Docs', permission_classes=[AllowAny]
     )),
     path('api/', include('core.urls')),
+    path('api/', include('library.urls')),
     path('api/jwt-token/', obtain_jwt_token),
     path('api/jwt-refresh/', refresh_jwt_token),
     path('api/jwt-verify/', verify_jwt_token)

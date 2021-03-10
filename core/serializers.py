@@ -65,7 +65,14 @@ class LoginUserSerializer(serializers.ModelSerializer):
         return instance
 
 
+class UserProfileBasicSerializer(serializers.ModelSerializer):
+    model = UserProfile
+    fields = (
+        'id', 'role', 'full_name', 'photo', 'created_at',
+    )
+
+
 class RoleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Role
-        fields = ('id', 'name', 'created_at', 'updated_at', )
+        fields = ('id', 'name', 'created_at', 'updated_at',)
