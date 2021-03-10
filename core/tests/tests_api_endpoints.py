@@ -49,7 +49,7 @@ class CoreAPIEndpointTestCase(LibraryManagementBaseTestCase):
         self.login_admin_user()
         response = self.client.get(path='/api/roles/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertTrue(isinstance(response.data, list))
+        self.assertTrue(isinstance(response.data['results'], list))
 
     def test_post_role_api(self):
         self.login_admin_user()
@@ -66,9 +66,9 @@ class CoreAPIEndpointTestCase(LibraryManagementBaseTestCase):
         self.login_admin_user()
         response = self.client.get(path='/api/roles/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertTrue(isinstance(response.data, list))
-        _pk = response.data[0]['id'] # Getting the first object PK
-        _old_name = response.data[0]['name'] # Getting the first object old name
+        self.assertTrue(isinstance(response.data['results'], list))
+        _pk = response.data['results'][0]['id'] # Getting the first object PK
+        _old_name = response.data['results'][0]['name'] # Getting the first object old name
         _data = {
             'id': _pk,
             'name': 'New Test Role'
