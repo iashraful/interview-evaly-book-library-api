@@ -36,17 +36,31 @@ class BookLoanAPIEndpointTestCase(LibraryManagementBaseTestCase):
         self.book_loan.save()
 
     def test_delete_book_loan_api(self):
+        # Login as admin user
         self.login_admin_user()
         response = self.client.delete(path=f'/api/book-loans/{self.book_loan.id}/')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
+        # Login as member user
+        self.login_member_user()
+        response = self.client.delete(path=f'/api/book-loans/{self.book_loan.id}/')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
     def test_get_book_loan_api(self):
+        # Login as admin user
         self.login_admin_user()
         response = self.client.get(path='/api/book-loans/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTrue(isinstance(response.data['results'], list))
 
+        # Login as member user
+        self.login_member_user()
+        response = self.client.get(path='/api/book-loans/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(isinstance(response.data['results'], list))
+
     def test_post_book_loan_api(self):
+        # Login as admin user
         self.login_admin_user()
         _data = deepcopy(self.initial_book_loan_data)
         _data['book'] = self.book.pk
@@ -57,7 +71,16 @@ class BookLoanAPIEndpointTestCase(LibraryManagementBaseTestCase):
         self.assertEqual(response.data['book'], self.book.id)
         self.assertEqual(response.data['request_by']['id'], self.member_user.pk)
 
+        # Login as member user
+        self.login_member_user()
+        _data = deepcopy(self.initial_book_loan_data)
+        _data['book'] = self.book.pk
+        _data['request_by'] = self.member_user.pk
+        response = self.client.post(path='/api/book-loans/', data=_data)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
     def test_put_book_loan_api(self):
+        # Login as admin user
         self.login_admin_user()
         _data = deepcopy(self.initial_book_loan_data)
         _data['book'] = self.book.pk
@@ -69,3 +92,14 @@ class BookLoanAPIEndpointTestCase(LibraryManagementBaseTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTrue(isinstance(response.data, dict))
         self.assertEqual(response.data['approved_by']['id'], self.admin_user.pk)
+
+        # Login as member user
+        self.login_member_user()
+        _data = deepcopy(self.initial_book_loan_data)
+        _data['book'] = self.book.pk
+        _data['request_by'] = self.member_user.pk
+        _data['approved_by'] = self.admin_user.pk
+        _data['approved_date'] = datetime.now() - timedelta(days=10)
+        _data['repayment_date'] = datetime.now() + timedelta(days=1)
+        response = self.client.put(path=f'/api/book-loans/{self.book_loan.id}/', data=_data)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
