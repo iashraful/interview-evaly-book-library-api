@@ -1,3 +1,8 @@
+import os
+
+import markdown
+from django.conf import settings
+from django.shortcuts import render
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST, HTTP_200_OK, HTTP_404_NOT_FOUND, \
@@ -7,6 +12,12 @@ from rest_framework.viewsets import ModelViewSet
 from core.models import Role, UserProfile
 from core.permissions import IsAdminOrReadOnly
 from core.serializers import UserRegistrationSerializer, LoginUserSerializer, RoleSerializer
+
+def index(request):
+    context = {}
+    with open(os.path.join(settings.BASE_DIR, 'README.md')) as readme:
+        context['html_readme'] = markdown.markdown(readme.read())
+    return render(request, 'index.html', context)
 
 
 class UserRegistrationViewset(ModelViewSet):

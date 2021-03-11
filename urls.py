@@ -5,10 +5,11 @@ from rest_framework.documentation import include_docs_urls
 from rest_framework_jwt.views import (obtain_jwt_token, refresh_jwt_token,
                                       verify_jwt_token)
 
-urlpatterns = []
+from core.views import index
 
-urlpatterns += [
-    path('', include_docs_urls(
+urlpatterns = [
+    path('', index, name='index'),
+    path('docs/', include_docs_urls(
         title='Library Management System API Docs', permission_classes=[AllowAny]
     )),
     path('api/', include('core.urls')),
