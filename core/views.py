@@ -3,6 +3,7 @@ import os
 import markdown
 from django.conf import settings
 from django.shortcuts import render
+from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST, HTTP_200_OK, HTTP_404_NOT_FOUND, \
@@ -12,6 +13,7 @@ from rest_framework.viewsets import ModelViewSet
 from core.models import Role, UserProfile
 from core.permissions import IsAdminOrReadOnly
 from core.serializers import UserRegistrationSerializer, LoginUserSerializer, RoleSerializer
+
 
 def index(request):
     context = {}
@@ -34,6 +36,7 @@ class UserRegistrationViewset(ModelViewSet):
 
 class LoginUserViewset(ModelViewSet):
     serializer_class = LoginUserSerializer
+    parser_classes = (MultiPartParser, FormParser)
 
     def retrieve(self, request, *args, **kwargs):
         user = request.user
