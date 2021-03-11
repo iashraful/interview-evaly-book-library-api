@@ -1,7 +1,7 @@
 from django.urls import path
 
 from library.views.author_views import AuthorViewset
-from library.views.book_loan_views import BookLoanViewset, BookLoanApproveView, BookLoanRejectView
+from library.views.book_loan_views import BookLoanViewset, BookLoanApproveView, BookLoanRejectView, BookLoanExportView
 from library.views.book_views import BookViewset
 
 urlpatterns = [
@@ -19,4 +19,5 @@ urlpatterns = [
 
     path('book-loans/<int:pk>/approve/', BookLoanApproveView.as_view({'put': 'update',}), name='book_loan_approve'),
     path('book-loans/<int:pk>/reject/', BookLoanRejectView.as_view({'put': 'update',}), name='book_loan_reject'),
+    path('book-loans/export/', BookLoanExportView.as_view(), name='book_loan_export'),
 ]

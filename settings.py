@@ -107,7 +107,9 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = 'static_root'
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+EXPORTED_FILES_DIR = 'exported_files'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+EXPORTED_FILES = os.path.join(MEDIA_ROOT, EXPORTED_FILES_DIR)
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (

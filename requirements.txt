@@ -6,3 +6,4 @@ psycopg2-binary==2.8.5
 coreapi
 djangorestframework-jwt
 markdown
+tablib[xlsx]

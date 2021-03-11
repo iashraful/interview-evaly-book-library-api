@@ -89,3 +89,10 @@ class BookLoanSerializer(serializers.ModelSerializer):
             instance.request_by_id = self.initial_data.get('request_by')
             instance.save()
             return instance
+
+
+class BookLoanExportSerializer(serializers.Serializer):
+    file_path = serializers.CharField(read_only=True)
+
+    class Meta:
+        fields = ('file_path',)

@@ -29,3 +29,27 @@ class IsAdminOrReadOnly(permissions.IsAuthenticated):
 
     def has_object_permission(self, request, view, obj):
         return self.permission_analyzer(request=request, view=view, obj=obj)
+
+
+class IsAdminOrNoAccess(permissions.IsAuthenticated):
+    def has_permission(self, request, view):
+        try:
+            profile = getattr(request.user, 'user_profile', None)
+            if profile:
+                if profile.role.type == RoleEnum.Admin.value:
+                    return True
+                return False
+            return False
+        except Exception:
+            return False
+
+    def has_object_permission(self, request, view, obj):
+        try:
+            profile = getattr(request.user, 'user_profile', None)
+            if profile:
+                if profile.role.type == RoleEnum.Admin.value:
+                    return True
+                return False
+            return False
+        except Exception:
+            return False
