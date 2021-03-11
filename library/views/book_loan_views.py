@@ -1,14 +1,18 @@
+from datetime import datetime
+
+from django.utils import timezone
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from core.permissions import IsAdminOrReadOnly
+from library.enums import BookLoanStatusEnum
 from library.models import BookLoan
 from library.serializers import BookLoanSerializer
 
 
 class BookLoanViewset(ModelViewSet):
-    queryset = BookLoan.objects.select_related('request_by', 'approved_by').all()
+    queryset = BookLoan.objects.select_related('request_by', 'action_taken_by').all()
     serializer_class = BookLoanSerializer
     permission_classes = [IsAdminOrReadOnly]
 
@@ -46,3 +50,39 @@ class BookLoanViewset(ModelViewSet):
             return Response(data={'message': err.__str__()}, status=status.HTTP_404_NOT_FOUND)
 
 
+class BookLoanApproveView(ModelViewSet):
+    serializer_class = BookLoanSerializer
+    permission_classes = [IsAdminOrReadOnly]
+
+    def update(self, request, *args, **kwargs):
+        try:
+            _object = BookLoan.objects.get(pk=kwargs.get('pk'))
+            _object.action_taken_by = request.user.user_profile
+            _object.action_date = timezone.now()
+            _object.status = BookLoanStatusEnum.Approved.value
+            _object.save()
+            serializer = BookLoanSerializer(_object)
+            return Response(data=serializer.data, status=status.HTTP_200_OK)
+        except BookLoan.DoesNotExist as err:
+            return Response(data={'message': err.__str__()}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as err:
+            return Response(data={'message': err.__str__()}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class BookLoanRejectView(ModelViewSet):
+    serializer_class = BookLoanSerializer
+    permission_classes = [IsAdminOrReadOnly]
+
+    def update(self, request, *args, **kwargs):
+        try:
+            _object = BookLoan.objects.get(pk=kwargs.get('pk'))
+            _object.action_taken_by = request.user.user_profile
+            _object.action_date = timezone.now()
+            _object.status = BookLoanStatusEnum.Rejected.value
+            _object.save()
+            serializer = BookLoanSerializer(_object)
+            return Response(data=serializer.data, status=status.HTTP_200_OK)
+        except BookLoan.DoesNotExist as err:
+            return Response(data={'message': err.__str__()}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as err:
+            return Response(data={'message': err.__str__()}, status=status.HTTP_400_BAD_REQUEST)

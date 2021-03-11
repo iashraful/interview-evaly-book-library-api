@@ -1,6 +1,7 @@
 from django.db import models
 
 from core.models import BaseEntity
+from library.enums import BookLoanStatusEnum
 
 
 class Author(BaseEntity):
@@ -29,10 +30,11 @@ class BookLoan(BaseEntity):
     book = models.ForeignKey('library.Book', on_delete=models.SET_NULL, null=True, related_name='book_loans')
     request_by = models.ForeignKey(
         'core.UserProfile', on_delete=models.SET_NULL, null=True, related_name='req_book_loans')
-    approved_by = models.ForeignKey(
+    action_taken_by = models.ForeignKey(
         'core.UserProfile', on_delete=models.SET_NULL, null=True, related_name='approve_book_loans')
-    approved_date = models.DateTimeField(auto_now=False, auto_now_add=False, null=True)
+    action_date = models.DateTimeField(auto_now=False, auto_now_add=False, null=True)
     repayment_date = models.DateTimeField(auto_now=False, auto_now_add=False, null=True)
+    status = models.SmallIntegerField(default=BookLoanStatusEnum.Pending.value)
 
     class Meta:
         app_label = 'library'
