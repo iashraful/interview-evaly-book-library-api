@@ -129,3 +129,16 @@ class BookLoanAPIEndpointTestCase(LibraryManagementBaseTestCase):
         self.login_member_user()
         response = self.client.put(path=f'/api/book-loans/{self.book_loan.id}/reject/', data={})
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_book_loan_export_api(self):
+        # Login as admin user
+        self.login_admin_user()
+        response = self.client.get(path=f'/api/book-loans/export/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(isinstance(response.data, dict))
+        self.assertTrue(response.data['path'].startswith('/media/exported_files/'))
+
+        # Login as member user
+        self.login_member_user()
+        response = self.client.get(path=f'/api/book-loans/export/')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)

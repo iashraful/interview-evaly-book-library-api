@@ -2,6 +2,7 @@ import os
 from datetime import datetime
 
 import tablib
+from django.conf import settings
 from django.utils import timezone
 from rest_framework import status
 from rest_framework.response import Response
@@ -11,8 +12,7 @@ from rest_framework.viewsets import ModelViewSet
 from core.permissions import IsAdminOrReadOnly, IsAdminOrNoAccess
 from library.enums import BookLoanStatusEnum
 from library.models import BookLoan
-from library.serializers import BookLoanSerializer, BookLoanExportSerializer
-from django.conf import settings
+from library.serializers import BookLoanSerializer
 
 
 class BookLoanViewset(ModelViewSet):
@@ -117,7 +117,7 @@ class BookLoanExportView(APIView):
                     loan['book__title'], loan['book__author__name'], loan['request_by__full_name'],
                     loan['request_by__role__name'], self.render_date_field(loan['created_at']),
                     loan['action_taken_by__full_name'],
-                    loan['action_taken_by__role__name'], BookLoanStatusEnum(loan['status']).name,
+                    loan['action_taken_by__role__name'],  BookLoanStatusEnum(loan['status']).name,
                     self.render_date_field(loan['action_date']), self.render_date_field(loan['repayment_date'])
                 )
                 data.append(_row)
