@@ -5,6 +5,7 @@ from rest_framework_jwt.test import APIJWTClient
 
 from core.enums import RoleEnum
 from core.models import Role, UserProfile
+from library.models import Author
 
 ROLE_VS_USERS = [
     {
@@ -47,6 +48,14 @@ class LibraryManagementBaseTestCase(APITestCase):
                     _profile, _created = UserProfile.objects.get_or_create(user_id=_user.pk, role_id=role.pk)
         # END Creating roles and users
 
+        # Create Author User
+        _user = User(username='test_author')
+        _user.set_password(raw_password=self.common_passwd)
+        _user.save()
+        self.author = Author(name='Test Author', gender='Male')
+        self.author.user = _user
+        self.author.save()
+
         # Login user according to Role
         self.admin_user_token = None
         self.member_user_token = None
@@ -77,4 +86,18 @@ class LibraryManagementBaseTestCase(APITestCase):
         if response.status_code == status.HTTP_200_OK:
             self.member_user_token = response.data['token']
             self.client.credentials(HTTP_AUTHORIZATION='JWT {0}'.format(self.member_user_token))
+        return _username
+
+    def login_author_user(self):
+        '''
+        This is a helper method for the base class. We will use this where necessary to login a author user
+        '''
+        _username = 'test_author'
+        response = self.client.post(path='/api/jwt-token/', data={
+            'username': _username,
+            'password': self.common_passwd
+        })
+        if response.status_code == status.HTTP_200_OK:
+            _token = response.data['token']
+            self.client.credentials(HTTP_AUTHORIZATION='JWT {0}'.format(_token))
         return _username

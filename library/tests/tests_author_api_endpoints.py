@@ -22,7 +22,7 @@ class AuthorAPIEndpointTestCase(LibraryManagementBaseTestCase):
         _user.set_password(raw_password=self.common_passwd)
         _user.save()
         self.author = Author(name='Ashraful Islam', gender='Male')
-        self.author.profile = _user
+        self.author.user = _user
         self.author.save()
 
     def test_delete_author_api(self):

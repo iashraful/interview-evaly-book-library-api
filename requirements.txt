@@ -7,3 +7,4 @@ coreapi
 djangorestframework-jwt
 markdown
 tablib[xlsx]
+rest_condition

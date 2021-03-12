@@ -47,6 +47,12 @@ class BookAPIEndpointTestCase(LibraryManagementBaseTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTrue(isinstance(response.data['results'], list))
 
+        # Login as Author user
+        self.login_author_user()
+        response = self.client.get(path='/api/books/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(isinstance(response.data['results'], list))
+
     def test_post_book_api(self):
         self.login_admin_user()
         _data = deepcopy(self.initial_book_data)
@@ -61,6 +67,13 @@ class BookAPIEndpointTestCase(LibraryManagementBaseTestCase):
 
         # Login as member user
         self.login_member_user()
+        _data = deepcopy(self.initial_book_data)
+        _data['author'] = self.book.author_id
+        response = self.client.post(path='/api/books/', data=_data)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        # Login as Author user
+        self.login_author_user()
         _data = deepcopy(self.initial_book_data)
         _data['author'] = self.book.author_id
         response = self.client.post(path='/api/books/', data=_data)

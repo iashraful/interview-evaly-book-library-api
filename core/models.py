@@ -36,6 +36,7 @@ class UserProfile(BaseEntity):
         app_label = 'core'
 
     def save(self, **kwargs):
+        # If don't have the full name then make full name from first name and last name
         if not self.full_name:
             self.full_name = f'{self.user.first_name} {self.user.last_name}'
         super(UserProfile, self).save(**kwargs)
