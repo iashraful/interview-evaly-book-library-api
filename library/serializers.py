@@ -4,7 +4,6 @@ from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-
 from core.serializers import UserProfileBasicSerializer, DjangoUserBasicSerializer
 from library.models import Author, Book, BookLoan
 
@@ -75,20 +74,6 @@ class BookLoanSerializer(serializers.ModelSerializer):
             'id', 'book', 'request_by', 'action_taken_by', 'action_date', 'status',
             'repayment_date', 'created_at', 'updated_at',
         )
-
-    def create(self, validated_data):
-        with transaction.atomic():
-            instance = super(BookLoanSerializer, self).create(validated_data=validated_data)
-            instance.request_by_id = self.initial_data.get('request_by')
-            instance.save()
-            return instance
-
-    def update(self, instance, validated_data):
-        with transaction.atomic():
-            instance = super(BookLoanSerializer, self).create(validated_data=validated_data)
-            instance.request_by_id = self.initial_data.get('request_by')
-            instance.save()
-            return instance
 
 
 class BookLoanExportSerializer(serializers.Serializer):

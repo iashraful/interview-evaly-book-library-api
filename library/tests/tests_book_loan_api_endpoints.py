@@ -66,38 +66,36 @@ class BookLoanAPIEndpointTestCase(LibraryManagementBaseTestCase):
         self.login_admin_user()
         _data = deepcopy(self.initial_book_loan_data)
         _data['book'] = self.book.pk
-        _data['request_by'] = self.member_user.pk
         response = self.client.post(path='/api/book-loans/', data=_data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertTrue(isinstance(response.data, dict))
         self.assertEqual(response.data['book'], self.book.id)
-        self.assertEqual(response.data['request_by']['id'], self.member_user.pk)
+        self.assertEqual(response.data['request_by']['id'], self.admin_user.pk)
 
         # Login as member user
         self.login_member_user()
         _data = deepcopy(self.initial_book_loan_data)
         _data['book'] = self.book.pk
-        _data['request_by'] = self.member_user.pk
         response = self.client.post(path='/api/book-loans/', data=_data)
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data['book'], self.book.id)
+        # It'll automatically set the requested user
+        self.assertEqual(response.data['request_by']['id'], self.member_user.pk)
 
     def test_put_book_loan_api(self):
         # Login as admin user
         self.login_admin_user()
         _data = deepcopy(self.initial_book_loan_data)
         _data['book'] = self.book.pk
-        _data['request_by'] = self.member_user.pk
         _data['repayment_date'] = timezone.now() + timedelta(days=1)
         response = self.client.put(path=f'/api/book-loans/{self.book_loan.id}/', data=_data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTrue(isinstance(response.data, dict))
-        self.assertEqual(response.data['request_by']['id'], self.member_user.pk)
 
         # Login as member user
         self.login_member_user()
         _data = deepcopy(self.initial_book_loan_data)
         _data['book'] = self.book.pk
-        _data['request_by'] = self.member_user.pk
         _data['repayment_date'] = timezone.now() + timedelta(days=1)
         response = self.client.put(path=f'/api/book-loans/{self.book_loan.id}/', data=_data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)

@@ -7,6 +7,26 @@ SAFE_ACTIONS = (
     'get', 'retrieve', 'list', 'head', 'options'
 )
 
+GET_OR_CREATE_ACTIONS = (
+    'get', 'retrieve', 'list', 'head', 'options',
+    'create', 'post'
+)
+
+
+class IsMemberCreateAccess(permissions.IsAuthenticated):
+    def has_permission(self, request, view):
+        try:
+            profile = getattr(request.user, 'user_profile', None)
+            if profile:
+                if profile.role.type == RoleEnum.Member.value:
+                    if view.action in GET_OR_CREATE_ACTIONS:
+                        return True
+                    return False
+                return False
+            return False
+        except Exception:
+            return False
+
 
 class IsAdminOrReadOnly(permissions.IsAuthenticated):
     '''
@@ -53,6 +73,7 @@ class IsAdminOrNoAccess(permissions.IsAuthenticated):
     '''
     For some of the views who have only admin access.
     '''
+
     def has_permission(self, request, view):
         try:
             profile = getattr(request.user, 'user_profile', None)

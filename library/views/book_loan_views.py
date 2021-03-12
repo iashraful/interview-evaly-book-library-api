@@ -4,12 +4,13 @@ from datetime import datetime
 import tablib
 from django.conf import settings
 from django.utils import timezone
+from rest_condition import Or
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
-from core.permissions import IsAdminOrReadOnly, IsAdminOrNoAccess
+from core.permissions import IsAdminOrReadOnly, IsAdminOrNoAccess, IsMemberCreateAccess
 from library.enums import BookLoanStatusEnum
 from library.models import BookLoan
 from library.serializers import BookLoanSerializer
@@ -18,12 +19,14 @@ from library.serializers import BookLoanSerializer
 class BookLoanViewset(ModelViewSet):
     queryset = BookLoan.objects.select_related('book', 'request_by', 'action_taken_by').all()
     serializer_class = BookLoanSerializer
-    permission_classes = [IsAdminOrReadOnly]
+    permission_classes = [Or(IsAdminOrReadOnly, IsMemberCreateAccess)]
 
     def create(self, request, *args, **kwargs):
         serializer = BookLoanSerializer(data=self.request.data)
         if serializer.is_valid(raise_exception=True):
-            serializer.save()
+            instance = serializer.save()
+            instance.request_by = getattr(request.user, 'user_profile', None)
+            instance.save()
             return Response(data=serializer.data, status=status.HTTP_201_CREATED)
         return Response(data=serializer.data, status=status.HTTP_400_BAD_REQUEST)
 
