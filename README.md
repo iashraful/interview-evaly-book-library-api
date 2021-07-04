@@ -23,7 +23,7 @@ docker-compose up api_server -d
 
 ### How the API could be useful?
 As we already ran the `init_data` command. So, our test/fake data are ready. I assume that your project is running.
-So, browse the <a target="_blank" href="/docs/">API Docs</a>.
+So, browse the at **/docs/**. .
 
 **Admin Users**  
 * Username: 'admin', Password: '1234'   
